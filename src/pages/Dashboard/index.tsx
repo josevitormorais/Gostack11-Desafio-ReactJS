@@ -47,13 +47,14 @@ const Dashboard: React.FC = () => {
         }),
       );
 
+      setTransactions(transactionsFormatted);
+
       const balanceFormatted = {
         income: formatValue(response.data.balance.income),
         outcome: formatValue(response.data.balance.outcome),
         total: formatValue(response.data.balance.total),
       };
 
-      setTransactions(transactionsFormatted);
       setBalance(balanceFormatted);
     }
     loadTransactions();
@@ -62,29 +63,31 @@ const Dashboard: React.FC = () => {
     <>
       <Header />
       <Container>
-        <CardContainer>
-          <Card>
-            <header>
-              <p>Entradas</p>
-              <img src={income} alt="Income" />
-            </header>
-            <h1 data-testid="balance-income">{balance.income}</h1>
-          </Card>
-          <Card>
-            <header>
-              <p>Saídas</p>
-              <img src={outcome} alt="Outcome" />
-            </header>
-            <h1 data-testid="balance-outcome">{balance.outcome}</h1>
-          </Card>
-          <Card total>
-            <header>
-              <p>Total</p>
-              <img src={total} alt="Total" />
-            </header>
-            <h1 data-testid="balance-total">{balance.total}</h1>
-          </Card>
-        </CardContainer>
+        {balance && (
+          <CardContainer>
+            <Card>
+              <header>
+                <p>Entradas</p>
+                <img src={income} alt="Income" />
+              </header>
+              <h1 data-testid="balance-income">{balance.income}</h1>
+            </Card>
+            <Card>
+              <header>
+                <p>Saídas</p>
+                <img src={outcome} alt="Outcome" />
+              </header>
+              <h1 data-testid="balance-outcome">{balance.outcome}</h1>
+            </Card>
+            <Card total>
+              <header>
+                <p>Total</p>
+                <img src={total} alt="Total" />
+              </header>
+              <h1 data-testid="balance-total">{balance.total}</h1>
+            </Card>
+          </CardContainer>
+        )}
 
         <TableContainer>
           <table>
@@ -96,19 +99,20 @@ const Dashboard: React.FC = () => {
                 <th>Data</th>
               </tr>
             </thead>
-            {transactions.map(transaction => (
-              <tbody key={transaction.id}>
-                <tr>
+
+            <tbody>
+              {transactions.map(transaction => (
+                <tr key={transaction.id}>
                   <td className="title">{transaction.title}</td>
                   <td className={transaction.type}>
-                    {transaction.type === 'outcome' && '-'}
+                    {transaction.type === 'outcome' && ' - '}
                     {transaction.formattedValue}
                   </td>
                   <td>{transaction.category.title}</td>
                   <td>{transaction.formattedDate}</td>
                 </tr>
-              </tbody>
-            ))}
+              ))}
+            </tbody>
           </table>
         </TableContainer>
       </Container>
